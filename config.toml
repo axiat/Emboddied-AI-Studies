@@ -1,11 +1,21 @@
 baseURL = "https://axiat.github.io/Emboddied-AI-Studies/"
 languageCode = "zh-cn"
-title = "Embodied AI Studies"
+defaultContentLanguage = "zh"
+hasCJKLanguage = true
+title = "研究札记"
 theme = "PaperMod"
+
+[languages]
+  [languages.zh]
+    languageCode = "zh-cn"
+    languageName = "简体中文"
+    weight = 1
 
 [params]
   author = "Qin Xu"
-  description = "Paper reading notes on embodied AI — structured skill spaces, world models, and closed-loop decision making."
+  description = "围绕结构化技能空间、world model 与闭环高层决策的研究札记。"
+  defaultTheme = "light"
+  mainSections = ["posts"]
   ShowToc = true
   TocOpen = true
   ShowReadingTime = true
@@ -13,8 +23,66 @@ theme = "PaperMod"
   ShowBreadCrumbs = true
 
 [params.homeInfoParams]
-  Title = "Embodied AI Studies"
-  Content = "Paper reading notes and research insights in embodied intelligence."
+  Title = "研究札记"
+  Content = "围绕具身智能的论文阅读、研究判断与公开写作。"
+
+  [params.assets]
+    favicon = "favicon.svg"
+    favicon16x16 = "favicon-16x16.png"
+    favicon32x32 = "favicon-32x32.png"
+    apple_touch_icon = "apple-touch-icon.png"
+    safari_pinned_tab = "safari-pinned-tab.svg"
+    theme_color = "#f5f4ed"
+    msapplication_TileColor = "#f5f4ed"
+
+  [params.editorial]
+    eyebrow = "北航 CS 博士研究工作流"
+    heroTitle = "把具身智能的阅读、判断与汇报，写成一套可复用的研究札记。"
+    heroLead = "这里记录结构化技能空间、world model 与闭环高层决策相关的论文阅读、方法拆解与公开写作。"
+    heroNote = "目标不是堆积摘要，而是把真正值得继续追的论文、方法模块与研究线索，整理成短而密、可以反复调用的文章。"
+    heroPanelLabel = "当前主线"
+    heroPanelTitle = "面向具身规划的结构化技能空间，以及始终闭环的高层决策。"
+    heroPanelText = "核心问题是：系统能否理解状态、选择技能、执行、观察反馈，并在失败后重新规划，而不是依赖一次性的 open-loop 计划。"
+    githubURL = "https://github.com/axiat"
+    recentTitle = "最近写作"
+    recentDescription = "公开文章会从高质量 review 中提炼出来，服务于研究者的快速判断，而不是做泛泛科普。"
+    emptyStateTitle = "公开文章还没开始发。"
+    emptyStateText = "写作流水线已经搭好，但发布仍然从 readings/ 里的强 review 和 REGISTRY.md 里的 A/B 评分开始。"
+    emptyStateHint = "第一篇文章建议直接从已完成评分、已经形成明确判断的论文开始，不要从“还没想清楚”的材料硬写。"
+    firstPostTitle = "第一篇文章上线后，首页会自动切到“代表作 + 最近更新”的节奏。"
+    firstPostText = "最上面的卡片会优先承接最新一篇正式文章，让首页从“研究工作流说明”自然过渡到“已有公开判断”。"
+
+  [[params.editorial.tracks]]
+    title = "结构化技能空间"
+    text = "把技能表示成前置条件、策略、状态转移与终止分布，让高层控制真的能够推理，而不是只会猜。"
+
+  [[params.editorial.tracks]]
+    title = "用于规划的 world model"
+    text = "把预测模型当成可复用模拟器，用于技能选择、反事实 rollout 与失败诊断，而不只是做离线表征学习。"
+
+  [[params.editorial.tracks]]
+    title = "闭环高层决策"
+    text = "让规划始终绑定最新执行反馈，使系统能够恢复、调整，并持续修正下一步该做什么。"
+
+  [[params.editorial.workflow]]
+    step = "01"
+    title = "深读论文"
+    text = "每篇公开文章都从高密度 paper review 开始，而不是从一句模糊摘要开始。"
+
+  [[params.editorial.workflow]]
+    step = "02"
+    title = "评分入册"
+    text = "在分享之前，先判断创新性、可延伸性与可复用性，把结论写进 scorecard。"
+
+  [[params.editorial.workflow]]
+    step = "03"
+    title = "提炼成博客"
+    text = "只有真正有杠杆价值的工作，才会被改写成短而有观点的公开文章。"
+
+  [[params.editorial.workflow]]
+    step = "04"
+    title = "回流到汇报"
+    text = "写下来的东西会反哺组会与汇报，形成一条可复用的研究工作流。"
 
 [[params.socialIcons]]
   name = "github"
@@ -22,11 +90,11 @@ theme = "PaperMod"
 
 [menu]
   [[menu.main]]
-    name = "Posts"
+    name = "文章"
     url = "/posts/"
     weight = 1
   [[menu.main]]
-    name = "Tags"
+    name = "标签"
     url = "/tags/"
     weight = 2
 

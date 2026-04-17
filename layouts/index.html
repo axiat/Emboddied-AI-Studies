@@ -1,0 +1,143 @@
+{{- define "main" }}
+{{- $postsSection := site.GetPage "/posts" -}}
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $recentPosts := $posts.ByDate.Reverse -}}
+
+<div class="home-essay">
+  <section class="hero-section">
+    <div class="hero-copy">
+      {{- with site.Params.editorial.eyebrow }}
+      <p class="section-kicker">{{ . }}</p>
+      {{- end }}
+      <h1>{{ site.Params.editorial.heroTitle }}</h1>
+      <p class="hero-lead">{{ site.Params.editorial.heroLead }}</p>
+      <p class="hero-note">{{ site.Params.editorial.heroNote }}</p>
+
+      <div class="hero-actions">
+        {{- with $postsSection }}
+        <a class="button-primary" href="{{ .RelPermalink }}">查看文章归档</a>
+        {{- end }}
+        {{- with site.Params.editorial.githubURL }}
+        <a class="button-secondary" href="{{ . }}" rel="noopener noreferrer" target="_blank">查看 GitHub</a>
+        {{- end }}
+      </div>
+    </div>
+
+    <aside class="hero-panel">
+      <p class="section-kicker">{{ site.Params.editorial.heroPanelLabel }}</p>
+      <h2>{{ site.Params.editorial.heroPanelTitle }}</h2>
+      <p>{{ site.Params.editorial.heroPanelText }}</p>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-value">{{ len $posts }}</span>
+          <span class="hero-stat-label">已发布文章</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">{{ len site.Params.editorial.tracks }}</span>
+          <span class="hero-stat-label">核心研究主线</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">{{ len site.Params.editorial.workflow }}</span>
+          <span class="hero-stat-label">工作流阶段</span>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="chapter-section">
+    <div class="chapter-intro">
+      <p class="section-kicker">研究主线</p>
+      <h2>这个站点应当像博士研究的地图，而不是普通博客列表。</h2>
+      <p>下面这些主线，是后续写作会持续回到的问题空间。即使论文和实验在变化，真正重要的问题不会变。</p>
+    </div>
+
+    <div class="essay-grid">
+      {{- range site.Params.editorial.tracks }}
+      <article class="essay-card">
+        <h3>{{ .title }}</h3>
+        <p>{{ .text }}</p>
+      </article>
+      {{- end }}
+    </div>
+  </section>
+
+  <section class="chapter-section chapter-dark">
+    <div class="chapter-intro">
+      <p class="section-kicker">工作流</p>
+      <h2>从原始阅读到公开写作，研究产出走的是同一条流水线。</h2>
+      <p>视觉上也该把这种节奏表现出来：先摄入，后判断，再提炼，最后回流到汇报与讨论。</p>
+    </div>
+
+    <div class="workflow-grid">
+      {{- range site.Params.editorial.workflow }}
+      <article class="workflow-card">
+        <span class="workflow-step">{{ .step }}</span>
+        <h3>{{ .title }}</h3>
+        <p>{{ .text }}</p>
+      </article>
+      {{- end }}
+    </div>
+  </section>
+
+  <section class="chapter-section recent-section">
+    <div class="chapter-intro">
+      <p class="section-kicker">写作台</p>
+      <h2>{{ site.Params.editorial.recentTitle }}</h2>
+      <p>{{ site.Params.editorial.recentDescription }}</p>
+    </div>
+
+    {{- if gt (len $recentPosts) 0 }}
+    <div class="recent-grid">
+      {{- range $index, $page := first 3 $recentPosts }}
+      <article class="recent-card{{ if eq $index 0 }} recent-card-featured{{ end }}">
+        <p class="recent-meta">
+          <span>{{ $page.Date.Format "2006年1月2日" }}</span>
+          <span>{{ $page.ReadingTime }} 分钟阅读</span>
+          {{- if eq $index 0 }}
+          <span>首页代表作</span>
+          {{- end }}
+        </p>
+        <h3><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></h3>
+        <p>{{ $page.Summary | plainify | htmlUnescape | truncate 170 }}</p>
+        {{- with $page.Params.tags }}
+        <ul class="recent-tags">
+          {{- range first 3 . }}
+          <li>{{ . }}</li>
+          {{- end }}
+        </ul>
+        {{- end }}
+      </article>
+      {{- end }}
+    </div>
+    <div class="post-state-note">
+      <p class="empty-state-title">{{ site.Params.editorial.firstPostTitle }}</p>
+      <p>{{ site.Params.editorial.firstPostText }}</p>
+    </div>
+    {{- else }}
+    <div class="empty-state">
+      <p class="empty-state-title">{{ site.Params.editorial.emptyStateTitle }}</p>
+      <p>{{ site.Params.editorial.emptyStateText }}</p>
+      <p class="empty-state-hint">{{ site.Params.editorial.emptyStateHint }}</p>
+      <div class="empty-state-steps">
+        <div class="empty-step">
+          <span>01</span>
+          <p>先用 `research-paper-reader` 产出完整评分与结构化理解。</p>
+        </div>
+        <div class="empty-step">
+          <span>02</span>
+          <p>把结论沉到 `REGISTRY.md`，确认这篇值得公开写。</p>
+        </div>
+        <div class="empty-step">
+          <span>03</span>
+          <p>再用 `publish-blog` 把高质量 review 改写成正式文章。</p>
+        </div>
+      </div>
+      {{- with $postsSection }}
+      <a class="button-secondary" href="{{ .RelPermalink }}">打开文章页</a>
+      {{- end }}
+    </div>
+    {{- end }}
+  </section>
+</div>
+{{- end }}

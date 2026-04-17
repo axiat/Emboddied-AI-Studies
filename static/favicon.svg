@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">研究札记 favicon</title>
+  <desc id="desc">暖色纸面背景上的研究印记</desc>
+  <rect width="256" height="256" rx="56" fill="#f5f0e5"/>
+  <circle cx="128" cy="128" r="88" fill="#c96442"/>
+  <path d="M81 90c24-21 70-22 96 0" fill="none" stroke="#f5f0e5" stroke-linecap="round" stroke-width="12"/>
+  <path d="M87 129h82" fill="none" stroke="#f5f0e5" stroke-linecap="round" stroke-width="14"/>
+  <path d="M103 88v80c0 8 5 14 13 14h25c8 0 13-6 13-14v-80" fill="none" stroke="#f5f0e5" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <circle cx="128" cy="188" r="10" fill="#f5f0e5"/>
+</svg>
