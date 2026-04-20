@@ -1,0 +1,98 @@
+kicker = "研究地图"
+title = "Embodied AI Learning"
+description = "把常见方法先按两条大路分开看：一条是直接学 policy，另一条是先学 world model 再把它用于训练、规划或表征。这样放在首页，比把论文散着列出来更容易形成研究坐标。"
+
+[[branches]]
+name = "Policy-centric"
+goal = "目标：直接输出 action"
+
+  [[branches.groups]]
+  name = "Architecture: Specialized"
+
+    [[branches.groups.items]]
+    title = "ACT"
+    note = "IL, action chunking transformer"
+
+    [[branches.groups.items]]
+    title = "Diffusion Policy"
+    note = "IL, diffusion over actions"
+
+    [[branches.groups.items]]
+    title = "PPO / SAC"
+    note = "RL, model-free"
+
+  [[branches.groups]]
+  name = "Architecture: Foundation-model-based"
+  highlight = "这就是 VLA"
+
+    [[branches.groups.items]]
+    title = "RT-1 / RT-2"
+    note = "IL, VLM backbone, action tokens"
+
+    [[branches.groups.items]]
+    title = "OpenVLA"
+    note = "IL, SigLIP + DINO + Llama2"
+
+    [[branches.groups.items]]
+    title = "pi0"
+    note = "IL, flow matching over continuous actions"
+
+  [[branches.groups]]
+  name = "Architecture: Hierarchical / Modular"
+
+    [[branches.groups.items]]
+    title = "SayCan"
+    note = "LLM planner + learned affordance value"
+
+    [[branches.groups.items]]
+    title = "VoxPoser"
+    note = "LLM + 3D value map"
+
+    [[branches.groups.items]]
+    title = "Code-as-Policies"
+    note = "LLM 生成可执行代码"
+
+[[branches]]
+name = "Model-based"
+goal = "目标：先学 world model，再用它"
+
+  [[branches.groups]]
+  name = "Usage: Imagination training"
+  note = "WM 生成数据训 policy"
+
+    [[branches.groups.items]]
+    title = "Dreamer V1 / V2 / V3"
+    note = "self-sup WM + actor-critic"
+
+  [[branches.groups]]
+  name = "Usage: Planning with learned dynamics"
+
+    [[branches.groups.items]]
+    title = "MuZero"
+    note = "learned dynamics + MCTS"
+
+    [[branches.groups.items]]
+    title = "TD-MPC2"
+    note = "latent MPC + short rollouts"
+
+  [[branches.groups]]
+  name = "Usage: Video / Interactive simulator"
+
+    [[branches.groups.items]]
+    title = "UniSim"
+    note = "video world model"
+
+    [[branches.groups.items]]
+    title = "Genie / Genie 2"
+    note = "playable latent-action sim"
+
+  [[branches.groups]]
+  name = "Usage: Representation for downstream"
+
+    [[branches.groups.items]]
+    title = "JEPA / V-JEPA"
+    note = "prediction-based SSL features"
+
+    [[branches.groups.items]]
+    title = "Latent action models"
+    note = "e.g. LAPO"

@@ -2,6 +2,7 @@
 {{- $postsSection := site.GetPage "/posts" -}}
 {{- $posts := where site.RegularPages "Section" "posts" -}}
 {{- $recentPosts := $posts.ByDate.Reverse -}}
+{{- $learningMap := hugo.Data.embodied_ai_map -}}
 
 <div class="home-essay">
   <section class="hero-section">
@@ -44,6 +45,51 @@
       </div>
     </aside>
   </section>
+
+  {{- with $learningMap }}
+  <section class="chapter-section learning-map-section">
+    <div class="chapter-intro">
+      <p class="section-kicker">{{ .kicker }}</p>
+      <h2>{{ .title }}</h2>
+      <p>{{ .description }}</p>
+    </div>
+
+    <div class="learning-map-grid">
+      {{- range .branches }}
+      <article class="learning-branch">
+        <div class="learning-branch-head">
+          <p class="learning-branch-label">{{ .name }}</p>
+          <h3>{{ .goal }}</h3>
+        </div>
+
+        <div class="learning-groups">
+          {{- range .groups }}
+          <section class="learning-group">
+            <div class="learning-group-head">
+              <h4>{{ .name }}</h4>
+              {{- with .highlight }}
+              <span class="learning-group-highlight">{{ . }}</span>
+              {{- end }}
+            </div>
+            {{- with .note }}
+            <p class="learning-group-note">{{ . }}</p>
+            {{- end }}
+            <ul class="learning-items">
+              {{- range .items }}
+              <li class="learning-item">
+                <span class="learning-item-title">{{ .title }}</span>
+                <span class="learning-item-note">{{ .note }}</span>
+              </li>
+              {{- end }}
+            </ul>
+          </section>
+          {{- end }}
+        </div>
+      </article>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
 
   <section class="chapter-section">
     <div class="chapter-intro">
