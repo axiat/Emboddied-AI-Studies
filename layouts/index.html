@@ -1,189 +1,124 @@
-{{- define "main" }}
-{{- $postsSection := site.GetPage "/posts" -}}
-{{- $posts := where site.RegularPages "Section" "posts" -}}
-{{- $recentPosts := $posts.ByDate.Reverse -}}
-{{- $learningMap := hugo.Data.embodied_ai_map -}}
+{{- define "main" -}}
+{{- $allPosts := where .Site.RegularPages "Section" "posts" -}}
+{{- $scored := where $allPosts ".Params.scores" "ne" nil -}}
+{{- $published := where $allPosts ".Params.published" true -}}
+{{- $avatar := "avatar.jpg" -}}
+{{- $hasAvatar := fileExists (printf "static/%s" $avatar) -}}
 
-<div class="home-essay">
-  <section class="hero-section">
-    <div class="hero-copy">
-      {{- with site.Params.editorial.eyebrow }}
-      <p class="section-kicker">{{ . }}</p>
-      {{- end }}
-      <h1>{{ site.Params.editorial.heroTitle }}</h1>
-      <p class="hero-lead">{{ site.Params.editorial.heroLead }}</p>
-      <p class="hero-note">{{ site.Params.editorial.heroNote }}</p>
-
-      <div class="hero-actions">
-        {{- with $postsSection }}
-        <a class="button-primary" href="{{ .RelPermalink }}">查看文章归档</a>
-        {{- end }}
-        {{- with site.Params.editorial.githubURL }}
-        <a class="button-secondary" href="{{ . }}" rel="noopener noreferrer" target="_blank">查看 GitHub</a>
-        {{- end }}
-      </div>
-    </div>
-
-    <aside class="hero-panel">
-      <p class="section-kicker">{{ site.Params.editorial.heroPanelLabel }}</p>
-      <h2>{{ site.Params.editorial.heroPanelTitle }}</h2>
-      <p>{{ site.Params.editorial.heroPanelText }}</p>
-
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <span class="hero-stat-value">{{ len $posts }}</span>
-          <span class="hero-stat-label">已发布文章</span>
-        </div>
-        <div class="hero-stat">
-          <span class="hero-stat-value">{{ len site.Params.editorial.tracks }}</span>
-          <span class="hero-stat-label">核心研究主线</span>
-        </div>
-        <div class="hero-stat">
-          <span class="hero-stat-value">{{ len site.Params.editorial.workflow }}</span>
-          <span class="hero-stat-label">工作流阶段</span>
-        </div>
-      </div>
-    </aside>
-  </section>
-
-  {{- with $learningMap }}
-  <section class="chapter-section learning-map-section">
-    <div class="chapter-intro">
-      <p class="section-kicker">{{ .kicker }}</p>
-      <h2>{{ .title }}</h2>
-      <p>{{ .description }}</p>
-    </div>
-
-    <div class="learning-map-grid">
-      {{- range .branches }}
-      <article class="learning-branch">
-        <div class="learning-branch-head">
-          <p class="learning-branch-label">{{ .name }}</p>
-          <h3>{{ .goal }}</h3>
-        </div>
-
-        <div class="learning-groups">
-          {{- range .groups }}
-          <section class="learning-group">
-            <div class="learning-group-head">
-              <h4>{{ .name }}</h4>
-              {{- with .highlight }}
-              <span class="learning-group-highlight">{{ . }}</span>
-              {{- end }}
-            </div>
-            {{- with .note }}
-            <p class="learning-group-note">{{ . }}</p>
-            {{- end }}
-            <ul class="learning-items">
-              {{- range .items }}
-              <li class="learning-item">
-                <span class="learning-item-title">{{ .title }}</span>
-                <span class="learning-item-note">{{ .note }}</span>
-              </li>
-              {{- end }}
-            </ul>
-          </section>
-          {{- end }}
-        </div>
-      </article>
-      {{- end }}
-    </div>
-  </section>
-  {{- end }}
-
-  <section class="chapter-section">
-    <div class="chapter-intro">
-      <p class="section-kicker">研究主线</p>
-      <h2>这个站点应当像博士研究的地图，而不是普通博客列表。</h2>
-      <p>下面这些主线，是后续写作会持续回到的问题空间。即使论文和实验在变化，真正重要的问题不会变。</p>
-    </div>
-
-    <div class="essay-grid">
-      {{- range site.Params.editorial.tracks }}
-      <article class="essay-card">
-        <h3>{{ .title }}</h3>
-        <p>{{ .text }}</p>
-      </article>
-      {{- end }}
-    </div>
-  </section>
-
-  <section class="chapter-section chapter-dark">
-    <div class="chapter-intro">
-      <p class="section-kicker">工作流</p>
-      <h2>从原始阅读到公开写作，研究产出走的是同一条流水线。</h2>
-      <p>视觉上也该把这种节奏表现出来：先摄入，后判断，再提炼，最后回流到汇报与讨论。</p>
-    </div>
-
-    <div class="workflow-grid">
-      {{- range site.Params.editorial.workflow }}
-      <article class="workflow-card">
-        <span class="workflow-step">{{ .step }}</span>
-        <h3>{{ .title }}</h3>
-        <p>{{ .text }}</p>
-      </article>
-      {{- end }}
-    </div>
-  </section>
-
-  <section class="chapter-section recent-section">
-    <div class="chapter-intro">
-      <p class="section-kicker">写作台</p>
-      <h2>{{ site.Params.editorial.recentTitle }}</h2>
-      <p>{{ site.Params.editorial.recentDescription }}</p>
-    </div>
-
-    {{- if gt (len $recentPosts) 0 }}
-    <div class="recent-grid">
-      {{- range $index, $page := first 3 $recentPosts }}
-      <article class="recent-card{{ if eq $index 0 }} recent-card-featured{{ end }}">
-        <p class="recent-meta">
-          <span>{{ $page.Date.Format "2006年1月2日" }}</span>
-          <span>{{ $page.ReadingTime }} 分钟阅读</span>
-          {{- if eq $index 0 }}
-          <span>首页代表作</span>
-          {{- end }}
-        </p>
-        <h3><a href="{{ $page.RelPermalink }}">{{ $page.Title }}</a></h3>
-        <p>{{ $page.Summary | plainify | htmlUnescape | truncate 170 }}</p>
-        {{- with $page.Params.tags }}
-        <ul class="recent-tags">
-          {{- range first 3 . }}
-          <li>{{ . }}</li>
-          {{- end }}
-        </ul>
-        {{- end }}
-      </article>
-      {{- end }}
-    </div>
-    <div class="post-state-note">
-      <p class="empty-state-title">{{ site.Params.editorial.firstPostTitle }}</p>
-      <p>{{ site.Params.editorial.firstPostText }}</p>
-    </div>
+<section class="rb-shell">
+  <div class="rb-bio" aria-label="Author">
+    {{- if $hasAvatar }}
+    <img src="{{ $avatar | relURL }}" alt="许沁宁">
     {{- else }}
-    <div class="empty-state">
-      <p class="empty-state-title">{{ site.Params.editorial.emptyStateTitle }}</p>
-      <p>{{ site.Params.editorial.emptyStateText }}</p>
-      <p class="empty-state-hint">{{ site.Params.editorial.emptyStateHint }}</p>
-      <div class="empty-state-steps">
-        <div class="empty-step">
-          <span>01</span>
-          <p>先用 `research-paper-reader` 产出完整评分与结构化理解。</p>
-        </div>
-        <div class="empty-step">
-          <span>02</span>
-          <p>把结论沉到 `REGISTRY.md`，确认这篇值得公开写。</p>
-        </div>
-        <div class="empty-step">
-          <span>03</span>
-          <p>再用 `publish-blog` 把高质量 review 改写成正式文章。</p>
-        </div>
-      </div>
-      {{- with $postsSection }}
-      <a class="button-secondary" href="{{ .RelPermalink }}">打开文章页</a>
-      {{- end }}
-    </div>
+    <div class="rb-avatar" aria-hidden="true">QX</div>
     {{- end }}
+    <div>
+      <p class="rb-bio-kicker">Research Blog</p>
+      <h1 class="rb-bio-name">Qinning Xu · 许沁宁</h1>
+      <p class="rb-bio-role">BUAA PhD Candidate</p>
+      <p class="rb-bio-copy">具身智能论文阅读、研究判断与可复用方法札记。</p>
+    </div>
+  </div>
+
+  <div class="rb-stats" aria-label="Research note stats">
+    <div class="rb-stat">
+      <div class="rb-stat-num">{{ len $allPosts }}</div>
+      <div class="rb-stat-label">已读</div>
+    </div>
+    <div class="rb-stat">
+      <div class="rb-stat-num">{{ len $scored }}</div>
+      <div class="rb-stat-label">已评分</div>
+    </div>
+    <div class="rb-stat">
+      <div class="rb-stat-num">{{ len $published }}</div>
+      <div class="rb-stat-label">已发布</div>
+    </div>
+  </div>
+
+  <section class="rb-filter-wrap" aria-label="Axis 1 filter">
+    <button class="rb-filter-trigger open" id="rb-filter-trigger" type="button" aria-expanded="true" aria-controls="rb-filter-body">
+      <span>按第一轴筛选 <small>再次点击收起</small></span>
+      <span class="arrow" aria-hidden="true">▼</span>
+    </button>
+    <div class="rb-filter-body open" id="rb-filter-body">
+      <div class="rb-filters">
+        <button class="rb-chip active" id="rb-f-all" type="button" data-rb-filter="all">全部</button>
+        <button class="rb-chip policy" id="rb-f-policy" type="button" data-rb-filter="policy">策略中心</button>
+        <button class="rb-chip model" id="rb-f-model" type="button" data-rb-filter="model">模型驱动</button>
+      </div>
+    </div>
   </section>
-</div>
-{{- end }}
+
+  <section class="rb-timeline" aria-label="Research timeline">
+    {{- if gt (len $allPosts) 0 -}}
+      {{- range $allPosts.ByDate.Reverse -}}
+      {{- $axis1 := .Params.axis1 | default "" -}}
+      {{- $axis2 := .Params.axis2 | default "" -}}
+      {{- $arch := .Params.arch | default "" -}}
+      {{- $axis1Label := "" -}}
+      {{- if eq $axis1 "policy" }}{{ $axis1Label = "策略中心" }}{{ end -}}
+      {{- if eq $axis1 "model" }}{{ $axis1Label = "模型驱动" }}{{ end -}}
+      {{- $axis2Label := "" -}}
+      {{- if eq $axis2 "il" }}{{ $axis2Label = "模仿学习" }}{{ end -}}
+      {{- if eq $axis2 "rl" }}{{ $axis2Label = "强化学习" }}{{ end -}}
+      {{- if eq $axis2 "ssl" }}{{ $axis2Label = "自监督" }}{{ end -}}
+      {{- if eq $axis2 "hybrid" }}{{ $axis2Label = "混合" }}{{ end -}}
+
+      <article class="rb-tl-item" data-axis="{{ $axis1 }}">
+        <time class="rb-tl-date" datetime="{{ .Date.Format "2006-01-02" }}">
+          {{ .Date.Format "01-02" }}
+          {{- with .Params.venue }}<span>{{ . }}</span>{{ end -}}
+        </time>
+        <div class="rb-tl-line" aria-hidden="true">
+          <div class="rb-tl-dot {{ $axis1 }}"></div>
+        </div>
+        <div class="rb-tl-content">
+          <h2 class="rb-tl-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+          <div class="tag-row">
+            {{- if $axis1Label }}<span class="t1 {{ $axis1 }}">{{ $axis1Label }}</span>{{ end -}}
+            {{- if $axis2Label }}<span class="t2 {{ $axis2 }}">{{ $axis2Label }}</span>{{ end -}}
+            {{- if $arch }}<span class="t3">{{ $arch }}</span>{{ end -}}
+            {{- with .Params.scores }}
+              {{- with .innovation }}<span class="rb-score a">创新性 {{ . }}</span>{{ end -}}
+              {{- with .extensibility }}<span class="rb-score b">可延伸 {{ . }}</span>{{ end -}}
+            {{- end }}
+          </div>
+          <p class="rb-tl-excerpt">{{ .Summary | plainify | htmlUnescape | truncate 180 }}</p>
+        </div>
+      </article>
+      {{- end -}}
+    {{- else -}}
+      <div class="rb-empty">
+        <p class="rb-empty-title">公开文章还没开始发。</p>
+        <p>把高质量论文 review 加入 <code>content/posts/</code> 后，首页会自动显示三层标签、评分与时间线。</p>
+      </div>
+    {{- end -}}
+  </section>
+</section>
+
+<script>
+(() => {
+  let activeFilter = "all";
+  const trigger = document.getElementById("rb-filter-trigger");
+  const body = document.getElementById("rb-filter-body");
+  const chips = document.querySelectorAll("[data-rb-filter]");
+  const items = document.querySelectorAll(".rb-tl-item");
+
+  function applyFilter(axis) {
+    const next = activeFilter === axis && axis !== "all" ? "all" : axis;
+    activeFilter = next;
+    chips.forEach((chip) => chip.classList.toggle("active", chip.dataset.rbFilter === next));
+    items.forEach((item) => item.classList.toggle("muted", next !== "all" && item.dataset.axis !== next));
+  }
+
+  chips.forEach((chip) => chip.addEventListener("click", () => applyFilter(chip.dataset.rbFilter)));
+  trigger?.addEventListener("click", () => {
+    const open = !body.classList.contains("open");
+    body.classList.toggle("open", open);
+    body.classList.toggle("closed", !open);
+    trigger.classList.toggle("open", open);
+    trigger.setAttribute("aria-expanded", String(open));
+  });
+})();
+</script>
+{{- end -}}

@@ -1,76 +1,126 @@
-{{- define "main" }}
+{{- define "main" -}}
+{{- $axis1 := .Params.axis1 | default "" -}}
+{{- $axis2 := .Params.axis2 | default "" -}}
+{{- $arch := .Params.arch | default "" -}}
+{{- $axis1Label := "" -}}
+{{- if eq $axis1 "policy" }}{{ $axis1Label = "策略中心" }}{{ end -}}
+{{- if eq $axis1 "model" }}{{ $axis1Label = "模型驱动" }}{{ end -}}
+{{- $axis2Label := "" -}}
+{{- if eq $axis2 "il" }}{{ $axis2Label = "模仿学习" }}{{ end -}}
+{{- if eq $axis2 "rl" }}{{ $axis2Label = "强化学习" }}{{ end -}}
+{{- if eq $axis2 "ssl" }}{{ $axis2Label = "自监督" }}{{ end -}}
+{{- if eq $axis2 "hybrid" }}{{ $axis2Label = "混合" }}{{ end -}}
 
-<article class="post-single editorial-post">
-  <header class="post-header">
-    {{ partial "breadcrumbs.html" . }}
-    {{- with .Section }}
-    <p class="post-kicker">{{ if eq . "posts" }}文章{{ else }}{{ . | humanize }}{{ end }}</p>
+<div class="rb-progress-wrap" aria-hidden="true">
+  <div class="rb-progress-bar">
+    <div class="rb-progress-bar-fill" id="rb-progress"></div>
+  </div>
+</div>
+
+<nav class="rb-breadcrumb" aria-label="Breadcrumb">
+  <a href="{{ "/" | relLangURL }}">Research Blog</a>
+  <span>›</span>
+  <a href="{{ "/posts/" | relLangURL }}">Posts</a>
+  {{- if $axis1Label }}
+  <span>›</span>
+  <span>{{ $axis1Label }}</span>
+  {{- end }}
+</nav>
+
+<button class="rb-mobile-toc-toggle" id="rb-mobile-toc-toggle" type="button" aria-expanded="false" aria-controls="rb-sidebar">
+  目录 <span id="rb-toc-arrow" aria-hidden="true">▼</span>
+</button>
+
+<article class="rb-post-layout">
+  <aside class="rb-sidebar" id="rb-sidebar">
+    {{- if .TableOfContents }}
+    <div class="rb-sidebar-label">目录</div>
+    <nav class="rb-toc" aria-label="Table of contents">
+      {{ .TableOfContents }}
+    </nav>
+    <hr class="rb-sidebar-divider">
     {{- end }}
-    <h1 class="post-title entry-hint-parent">
-      {{ .Title }}
-      {{- if .Draft }}
-      <span class="entry-hint" title="Draft">
-        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
-          <path
-            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
-        </svg>
-      </span>
-      {{- end }}
-    </h1>
-    {{- if .Description }}
-    <div class="post-description">
-      {{ .Description }}
+
+    <div class="rb-sidebar-label">论文信息</div>
+    <div class="rb-sidebar-info">
+      {{- with .Params.venue }}<div>{{ . }}</div>{{ end -}}
+      <div>{{ .Date.Format "2006-01-02" }}</div>
+      <div>{{ .ReadingTime }} 分钟</div>
     </div>
-    {{- end }}
-    {{- if not (.Param "hideMeta") }}
-    <div class="post-meta">
-      {{- partial "post_meta.html" . -}}
-      {{- partial "translation_list.html" . -}}
-      {{- partial "edit_post.html" . -}}
-      {{- partial "post_canonical.html" . -}}
+
+    <hr class="rb-sidebar-divider">
+    <div class="rb-sidebar-label">标签</div>
+    <div class="rb-sidebar-tags">
+      {{- if $axis1Label }}<span class="t1 {{ $axis1 }}">{{ $axis1Label }}</span>{{ end -}}
+      {{- if $axis2Label }}<span class="t2 {{ $axis2 }}">{{ $axis2Label }}</span>{{ end -}}
+      {{- if $arch }}<span class="t3">{{ $arch }}</span>{{ end -}}
     </div>
-    {{- end }}
-  </header>
+  </aside>
 
-  {{- $isHidden := (.Param "cover.hiddenInSingle") | default (.Param "cover.hidden") | default false }}
-  {{- partial "cover.html" (dict "cxt" . "IsSingle" true "isHidden" $isHidden) }}
+  <div class="rb-post-body">
+    <header class="rb-post-header">
+      {{- with .Params.venue }}<p class="rb-post-eyebrow">{{ . }}</p>{{ end -}}
+      <h1 class="rb-post-title">{{ .Title }}</h1>
+      <div class="rb-post-meta">
+        <span>许沁宁</span>
+        <span>{{ .Date.Format "2006-01-02" }}</span>
+        <span>{{ .ReadingTime }} 分钟</span>
+      </div>
+      <div class="tag-row rb-post-tags">
+        {{- if $axis1Label }}<span class="t1 {{ $axis1 }}">{{ $axis1Label }}</span>{{ end -}}
+        {{- if $axis2Label }}<span class="t2 {{ $axis2 }}">{{ $axis2Label }}</span>{{ end -}}
+        {{- if $arch }}<span class="t3">{{ $arch }}</span>{{ end -}}
+      </div>
+    </header>
 
-  <div class="post-layout">
-    <div class="post-layout-main">
-      {{- if .Content }}
-      <div class="post-content md-content">
-        {{- if not (.Param "disableAnchoredHeadings") }}
-        {{- partial "anchored_headings.html" .Content -}}
-        {{- else }}{{ .Content }}{{ end }}
+    {{- with .Params.scores }}
+    <section class="rb-scorecard" aria-label="评分卡">
+      <h2 class="rb-scorecard-title">评分卡</h2>
+      {{- with .innovation }}<div class="rb-score-row"><span>创新性</span><span class="rb-score-val">{{ . }}</span></div>{{ end -}}
+      {{- with .extensibility }}<div class="rb-score-row"><span>可延伸性</span><span class="rb-score-val">{{ . }}</span></div>{{ end -}}
+      {{- with .reusability }}<div class="rb-score-row"><span>可复用性</span><span class="rb-score-val">{{ . }}</span></div>{{ end -}}
+      {{- with $.Params.verdict }}
+      <div class="rb-score-row rb-score-row-verdict">
+        <span>一句话判断</span>
+        <span class="rb-score-verdict">{{ . }}</span>
       </div>
       {{- end }}
+    </section>
+    {{- end }}
 
-      <footer class="post-footer">
-        {{- $tags := .Language.Params.Taxonomies.tag | default "tags" }}
-        <ul class="post-tags">
-          {{- range ($.GetTerms $tags) }}
-          <li><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></li>
-          {{- end }}
-        </ul>
-        {{- if (.Param "ShowPostNavLinks") }}
-        {{- partial "post_nav_links.html" . }}
-        {{- end }}
-        {{- if (and site.Params.ShowShareButtons (ne .Params.disableShare true)) }}
-        {{- partial "share_icons.html" . -}}
-        {{- end }}
-      </footer>
+    <div class="rb-post-content">
+      {{ .Content }}
     </div>
 
-    {{- if (.Param "ShowToc") }}
-    <aside class="post-layout-side">
-      {{- partial "toc.html" . }}
-    </aside>
-    {{- end }}
+    <nav class="rb-post-nav" aria-label="Post navigation">
+      {{- with .PrevInSection }}<a href="{{ .RelPermalink }}">← {{ .Title | truncate 40 }}</a>{{ end -}}
+      {{- with .NextInSection }}<a href="{{ .RelPermalink }}">{{ .Title | truncate 40 }} →</a>{{ end -}}
+    </nav>
   </div>
-
-  {{- if (.Param "comments") }}
-  {{- partial "comments.html" . }}
-  {{- end }}
 </article>
 
-{{- end }}{{/* end main */}}
+<script>
+(() => {
+  const progress = document.getElementById("rb-progress");
+  const tocToggle = document.getElementById("rb-mobile-toc-toggle");
+  const sidebar = document.getElementById("rb-sidebar");
+  const tocArrow = document.getElementById("rb-toc-arrow");
+
+  function updateProgress() {
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - doc.clientHeight;
+    const pct = max > 0 ? (doc.scrollTop / max) * 100 : 0;
+    if (progress) progress.style.width = `${pct}%`;
+  }
+
+  window.addEventListener("scroll", updateProgress, { passive: true });
+  updateProgress();
+
+  tocToggle?.addEventListener("click", () => {
+    const open = sidebar.classList.toggle("open");
+    tocToggle.setAttribute("aria-expanded", String(open));
+    if (tocArrow) tocArrow.textContent = open ? "▲" : "▼";
+  });
+})();
+</script>
+{{- end -}}
