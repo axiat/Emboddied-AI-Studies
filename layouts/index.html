@@ -35,6 +35,80 @@
     </div>
   </div>
 
+  <section class="rb-map-wrap" aria-label="Taxonomy map">
+    <button class="rb-filter-trigger" id="rb-map-trigger" type="button" aria-expanded="false" aria-controls="rb-map-body">
+      <span>学习地图 · 决策范式 <small>展开看完整分类树</small></span>
+      <span class="arrow" aria-hidden="true">▼</span>
+    </button>
+    <div class="rb-map-body closed" id="rb-map-body">
+      <div class="rb-map-dims">
+        <div class="rb-map-dim-row">
+          <span class="rb-map-axis-label">主轴</span>
+          <div class="rb-map-chips">
+            <span class="rb-map-chip direct">Direct policy</span>
+            <span class="rb-map-chip mb">Model-based</span>
+            <span class="rb-map-chip hier">Hierarchical</span>
+            <span class="rb-map-chip hyb">Hybrid</span>
+          </div>
+        </div>
+        <div class="rb-map-dim-row">
+          <span class="rb-map-axis-label">正交轴</span>
+          <div class="rb-map-chips">
+            <span class="t3">Backbone</span>
+            <span class="t3">系统组织</span>
+            <span class="t3">训练信号</span>
+            <span class="t3">动作建模</span>
+          </div>
+        </div>
+        <div class="rb-map-template-row">
+          <code class="rb-map-template">[决策范式 · backbone · 系统组织 · 训练信号 · 动作建模]</code>
+        </div>
+      </div>
+<pre class="rb-map-tree">Embodied AI Learning
+│
+├─ Direct policy learning ── obs → action，端到端，无显式分层或 model
+│    ├─ Backbone: specialized
+│    │    ├─ ACT                          (IL, action chunking)
+│    │    └─ Diffusion Policy              (IL, diffusion over actions)
+│    ├─ Backbone: VLM/LLM-pretrained  ⇐ VLA
+│    │    ├─ RT-1 / RT-2                  (IL, tokenized action)
+│    │    ├─ OpenVLA                       (IL, SigLIP+DINO+Llama2, tokenized)
+│    │    └─ π0                            (IL, flow matching on continuous action)
+│    └─ 控制算法（优化目标，可用于任何 policy 参数化）
+│         └─ PPO / SAC / DQN               (RL)
+│
+├─ Model-based ── 先学 model，再用
+│    ├─ Layer 1 · model form
+│    │    ├─ Latent state-space dynamics   (Dreamer, TD-MPC2)
+│    │    ├─ Action-conditioned video / pixel WM  (UniSim, Genie)
+│    │    ├─ Predictive representation ⚠ 不 condition 动作
+│    │    │     └─ JEPA / V-JEPA            (SSL 特征，非 action-conditioned WM)
+│    │    └─ Latent action / skill model    (LAPO/LAPA — 从视频抠出潜在动作)
+│    └─ Layer 2 · usage mode
+│         ├─ Imagination for policy opt    (Dreamer: 想象 rollout 训 actor-critic)
+│         ├─ Online planning / MPC / search (MuZero+MCTS, TD-MPC2)
+│         ├─ Offline sim / data gen        (UniSim, Genie as sim)
+│         └─ Pretrain repr / skill disc    (JEPA, LAPO → 下游 policy)
+│
+├─ Hierarchical ── planner + 下层模块，组合系统
+│    ├─ 上层 (planner)
+│    │    ├─ LLM as planner                (SayCan, VoxPoser, Code-as-Policies)
+│    │    ├─ Learned manager / subgoal gen (Director, HIQL)
+│    │    └─ Value / affordance estimator  (SayCan affordance)
+│    └─ 下层 (executor)
+│         ├─ Pretrained skill library      (SayCan: 固定 BC policies)
+│         ├─ Generated code / primitive API (Code-as-Policies)
+│         ├─ 3D value map → MPC            (VoxPoser)
+│         ├─ Learned low-level policy on subgoal (Director worker)
+│         └─ Skill embedding (option/latent) (OPAL, SkiLD, FIST)
+│
+└─ Hybrid (跨范式组合)
+     ├─ Hierarchical × Model-based         (Director: Dreamer WM + 分层)
+     ├─ Direct + RL finetune               (OpenVLA-RL, RLHF for VLA)
+     └─ Model-based + LLM planner          (VoxPoser 下层是 MPC)</pre>
+    </div>
+  </section>
+
   <section class="rb-filter-wrap" aria-label="Axis 1 filter">
     <button class="rb-filter-trigger open" id="rb-filter-trigger" type="button" aria-expanded="true" aria-controls="rb-filter-body">
       <span>按第一轴筛选 <small>再次点击收起</small></span>
@@ -112,6 +186,16 @@
   }
 
   chips.forEach((chip) => chip.addEventListener("click", () => applyFilter(chip.dataset.rbFilter)));
+  const mapTrigger = document.getElementById("rb-map-trigger");
+  const mapBody = document.getElementById("rb-map-body");
+  mapTrigger?.addEventListener("click", () => {
+    const open = !mapBody.classList.contains("open");
+    mapBody.classList.toggle("open", open);
+    mapBody.classList.toggle("closed", !open);
+    mapTrigger.classList.toggle("open", open);
+    mapTrigger.setAttribute("aria-expanded", String(open));
+  });
+
   trigger?.addEventListener("click", () => {
     const open = !body.classList.contains("open");
     body.classList.toggle("open", open);
