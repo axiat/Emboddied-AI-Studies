@@ -72,6 +72,9 @@ a:hover {
 }
 
 .header-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   min-height: var(--header-height);
   max-width: var(--nav-width);
   padding: 0 28px;
