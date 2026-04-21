@@ -64,48 +64,114 @@
           <code class="rb-map-template">[决策范式 · backbone · 系统组织 · 训练信号 · 动作建模]</code>
         </div>
       </div>
-<pre class="rb-map-tree">Embodied AI Learning
-│
-├─ Direct policy learning ── obs → action，端到端，无显式分层或 model
-│    ├─ Backbone: specialized
-│    │    ├─ ACT                          (IL, action chunking)
-│    │    └─ Diffusion Policy              (IL, diffusion over actions)
-│    ├─ Backbone: VLM/LLM-pretrained  ⇐ VLA
-│    │    ├─ RT-1 / RT-2                  (IL, tokenized action)
-│    │    ├─ OpenVLA                       (IL, SigLIP+DINO+Llama2, tokenized)
-│    │    └─ π0                            (IL, flow matching on continuous action)
-│    └─ 控制算法（优化目标，可用于任何 policy 参数化）
-│         └─ PPO / SAC / DQN               (RL)
-│
-├─ Model-based ── 先学 model，再用
-│    ├─ Layer 1 · model form
-│    │    ├─ Latent state-space dynamics   (Dreamer, TD-MPC2)
-│    │    ├─ Action-conditioned video / pixel WM  (UniSim, Genie)
-│    │    ├─ Predictive representation ⚠ 不 condition 动作
-│    │    │     └─ JEPA / V-JEPA            (SSL 特征，非 action-conditioned WM)
-│    │    └─ Latent action / skill model    (LAPO/LAPA — 从视频抠出潜在动作)
-│    └─ Layer 2 · usage mode
-│         ├─ Imagination for policy opt    (Dreamer: 想象 rollout 训 actor-critic)
-│         ├─ Online planning / MPC / search (MuZero+MCTS, TD-MPC2)
-│         ├─ Offline sim / data gen        (UniSim, Genie as sim)
-│         └─ Pretrain repr / skill disc    (JEPA, LAPO → 下游 policy)
-│
-├─ Hierarchical ── planner + 下层模块，组合系统
-│    ├─ 上层 (planner)
-│    │    ├─ LLM as planner                (SayCan, VoxPoser, Code-as-Policies)
-│    │    ├─ Learned manager / subgoal gen (Director, HIQL)
-│    │    └─ Value / affordance estimator  (SayCan affordance)
-│    └─ 下层 (executor)
-│         ├─ Pretrained skill library      (SayCan: 固定 BC policies)
-│         ├─ Generated code / primitive API (Code-as-Policies)
-│         ├─ 3D value map → MPC            (VoxPoser)
-│         ├─ Learned low-level policy on subgoal (Director worker)
-│         └─ Skill embedding (option/latent) (OPAL, SkiLD, FIST)
-│
-└─ Hybrid (跨范式组合)
-     ├─ Hierarchical × Model-based         (Director: Dreamer WM + 分层)
-     ├─ Direct + RL finetune               (OpenVLA-RL, RLHF for VLA)
-     └─ Model-based + LLM planner          (VoxPoser 下层是 MPC)</pre>
+      <div class="rb-tree">
+        <div class="rb-tree-root">Embodied AI Learning</div>
+        <ul class="rb-tree-branches">
+          <li>
+            <div class="rb-tree-node">
+              <span class="rb-map-chip direct">Direct policy</span>
+              <span class="rb-tree-desc">obs → action · 端到端 · 无显式分层或 model</span>
+            </div>
+            <ul class="rb-tree-children">
+              <li>
+                <div class="rb-tree-sub">
+                  <span class="rb-tree-cat">Specialized backbone</span>
+                  <span class="t3">ACT</span><span class="rb-tree-note">IL · action chunking</span>
+                  <span class="t3">Diffusion Policy</span><span class="rb-tree-note">IL · diffusion</span>
+                </div>
+              </li>
+              <li>
+                <div class="rb-tree-sub">
+                  <span class="rb-tree-cat">VLM / LLM backbone</span>
+                  <span class="rb-tree-badge">VLA</span>
+                  <span class="t3">RT-1 / RT-2</span><span class="rb-tree-note">IL · tokenized</span>
+                  <span class="t3">OpenVLA</span><span class="rb-tree-note">SigLIP+DINO+Llama2</span>
+                  <span class="t3">π0</span><span class="rb-tree-note">IL · flow matching</span>
+                </div>
+              </li>
+              <li>
+                <div class="rb-tree-sub">
+                  <span class="rb-tree-cat">控制算法（优化目标）</span>
+                  <span class="t3">PPO / SAC / DQN</span><span class="rb-tree-note">RL · 可用于任何 policy 参数化</span>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <div class="rb-tree-node">
+              <span class="rb-map-chip mb">Model-based</span>
+              <span class="rb-tree-desc">先学 model · 再用</span>
+            </div>
+            <ul class="rb-tree-children">
+              <li>
+                <div class="rb-tree-sub">
+                  <span class="rb-tree-cat">Model form</span>
+                  <span class="t3">Dreamer · TD-MPC2</span><span class="rb-tree-note">latent dynamics</span>
+                  <span class="t3">UniSim · Genie</span><span class="rb-tree-note">action-cond. video WM</span>
+                  <span class="t3">JEPA / V-JEPA</span><span class="rb-tree-note">⚠ 非 action-cond. · SSL 特征</span>
+                  <span class="t3">LAPO / LAPA</span><span class="rb-tree-note">latent action model</span>
+                </div>
+              </li>
+              <li>
+                <div class="rb-tree-sub">
+                  <span class="rb-tree-cat">Usage mode</span>
+                  <span class="t3">Dreamer</span><span class="rb-tree-note">想象 rollout → policy opt</span>
+                  <span class="t3">MuZero · TD-MPC2</span><span class="rb-tree-note">online planning / MPC</span>
+                  <span class="t3">UniSim · Genie</span><span class="rb-tree-note">offline sim · data gen</span>
+                  <span class="t3">JEPA · LAPO</span><span class="rb-tree-note">pretrain repr → 下游 policy</span>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <div class="rb-tree-node">
+              <span class="rb-map-chip hier">Hierarchical</span>
+              <span class="rb-tree-desc">planner + 下层模块 · 组合系统</span>
+            </div>
+            <ul class="rb-tree-children">
+              <li>
+                <div class="rb-tree-sub">
+                  <span class="rb-tree-cat">上层 planner</span>
+                  <span class="t3">SayCan · VoxPoser · CoaP</span><span class="rb-tree-note">LLM as planner</span>
+                  <span class="t3">Director · HIQL</span><span class="rb-tree-note">learned manager / subgoal</span>
+                </div>
+              </li>
+              <li>
+                <div class="rb-tree-sub">
+                  <span class="rb-tree-cat">下层 executor</span>
+                  <span class="t3">SayCan skills</span><span class="rb-tree-note">固定 BC policy 库</span>
+                  <span class="t3">Code-as-Policies</span><span class="rb-tree-note">LLM → code → primitive API</span>
+                  <span class="t3">VoxPoser</span><span class="rb-tree-note">3D value map → MPC</span>
+                  <span class="t3">OPAL · SkiLD · FIST</span><span class="rb-tree-note">skill embedding</span>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <div class="rb-tree-node">
+              <span class="rb-map-chip hyb">Hybrid</span>
+              <span class="rb-tree-desc">跨范式组合</span>
+            </div>
+            <ul class="rb-tree-children">
+              <li>
+                <div class="rb-tree-sub">
+                  <span class="t3">Director</span><span class="rb-tree-note">Hierarchical × Model-based · Dreamer WM + 分层</span>
+                </div>
+              </li>
+              <li>
+                <div class="rb-tree-sub">
+                  <span class="t3">OpenVLA-RL</span><span class="rb-tree-note">Direct + RL finetune</span>
+                </div>
+              </li>
+              <li>
+                <div class="rb-tree-sub">
+                  <span class="t3">VoxPoser</span><span class="rb-tree-note">Model-based (MPC) + LLM planner</span>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
   </section>
 
