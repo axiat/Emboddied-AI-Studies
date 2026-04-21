@@ -182,9 +182,11 @@
     </button>
     <div class="rb-filter-body open" id="rb-filter-body">
       <div class="rb-filters">
-        <button class="rb-chip active" id="rb-f-all" type="button" data-rb-filter="all">全部</button>
-        <button class="rb-chip policy" id="rb-f-policy" type="button" data-rb-filter="policy">策略中心</button>
-        <button class="rb-chip model" id="rb-f-model" type="button" data-rb-filter="model">模型驱动</button>
+        <button class="rb-chip active" id="rb-f-all" type="button" data-rb-filter="all">All</button>
+        <button class="rb-chip direct" type="button" data-rb-filter="direct">Direct policy</button>
+        <button class="rb-chip model-based" type="button" data-rb-filter="model-based">Model-based</button>
+        <button class="rb-chip hierarchical" type="button" data-rb-filter="hierarchical">Hierarchical</button>
+        <button class="rb-chip hybrid" type="button" data-rb-filter="hybrid">Hybrid</button>
       </div>
     </div>
   </section>
@@ -196,13 +198,15 @@
       {{- $axis2 := .Params.axis2 | default "" -}}
       {{- $arch := .Params.arch | default "" -}}
       {{- $axis1Label := "" -}}
-      {{- if eq $axis1 "policy" }}{{ $axis1Label = "策略中心" }}{{ end -}}
-      {{- if eq $axis1 "model" }}{{ $axis1Label = "模型驱动" }}{{ end -}}
+      {{- if eq $axis1 "direct" }}{{ $axis1Label = "Direct policy" }}{{ end -}}
+      {{- if eq $axis1 "model-based" }}{{ $axis1Label = "Model-based" }}{{ end -}}
+      {{- if eq $axis1 "hierarchical" }}{{ $axis1Label = "Hierarchical" }}{{ end -}}
+      {{- if eq $axis1 "hybrid" }}{{ $axis1Label = "Hybrid" }}{{ end -}}
       {{- $axis2Label := "" -}}
-      {{- if eq $axis2 "il" }}{{ $axis2Label = "模仿学习" }}{{ end -}}
-      {{- if eq $axis2 "rl" }}{{ $axis2Label = "强化学习" }}{{ end -}}
-      {{- if eq $axis2 "ssl" }}{{ $axis2Label = "自监督" }}{{ end -}}
-      {{- if eq $axis2 "hybrid" }}{{ $axis2Label = "混合" }}{{ end -}}
+      {{- if eq $axis2 "il" }}{{ $axis2Label = "IL" }}{{ end -}}
+      {{- if eq $axis2 "rl" }}{{ $axis2Label = "RL" }}{{ end -}}
+      {{- if eq $axis2 "ssl" }}{{ $axis2Label = "SSL" }}{{ end -}}
+      {{- if eq $axis2 "hybrid" }}{{ $axis2Label = "Hybrid" }}{{ end -}}
 
       <article class="rb-tl-item" data-axis="{{ $axis1 }}">
         <time class="rb-tl-date" datetime="{{ .Date.Format "2006-01-02" }}">

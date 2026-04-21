@@ -319,25 +319,47 @@ a:hover {
   color: var(--paper);
 }
 
-.rb-chip.policy {
+.rb-chip.direct {
   border-color: var(--accent);
   color: var(--accent);
 }
 
-.rb-chip.policy.active {
+.rb-chip.direct.active {
   background: var(--accent);
   border-color: var(--accent);
   color: var(--surface-strong);
 }
 
-.rb-chip.model {
+.rb-chip.model-based {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.rb-chip.model-based.active {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: var(--surface-strong);
+}
+
+.rb-chip.hierarchical {
   border-color: var(--green);
   color: var(--green);
 }
 
-.rb-chip.model.active {
+.rb-chip.hierarchical.active {
   background: var(--green);
   border-color: var(--green);
+  color: var(--surface-strong);
+}
+
+.rb-chip.hybrid {
+  border-color: var(--ink3);
+  color: var(--ink3);
+}
+
+.rb-chip.hybrid.active {
+  background: var(--ink3);
+  border-color: var(--ink3);
   color: var(--surface-strong);
 }
 
@@ -390,14 +412,24 @@ a:hover {
   transform: translateX(-50%);
 }
 
-.rb-tl-dot.policy {
+.rb-tl-dot.direct {
   border-color: var(--accent);
   background: var(--accent);
 }
 
-.rb-tl-dot.model {
+.rb-tl-dot.model-based {
+  border-color: var(--blue);
+  background: var(--blue);
+}
+
+.rb-tl-dot.hierarchical {
   border-color: var(--green);
   background: var(--green);
+}
+
+.rb-tl-dot.hybrid {
+  border-color: var(--ink3);
+  background: var(--ink3);
 }
 
 .rb-tl-content {
@@ -453,12 +485,20 @@ a:hover {
   font-weight: 600;
 }
 
-.t1.policy {
+.t1.direct {
   background: var(--accent);
 }
 
-.t1.model {
+.t1.model-based {
+  background: var(--blue);
+}
+
+.t1.hierarchical {
   background: var(--green);
+}
+
+.t1.hybrid {
+  background: var(--ink3);
 }
 
 .t2 {
