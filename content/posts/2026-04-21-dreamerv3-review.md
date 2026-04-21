@@ -4,6 +4,11 @@ date: 2026-04-21
 tags: ["embodied-ai", "paper-notes", "world-model", "reinforcement-learning"]
 summary: "DreamerV3 用一套固定超参数在 8 个 domain、150+ 任务上稳定训练，核心是一整套让 world model RL 在异质任务分布下保持稳定的工程设计。"
 toc: true
+scores:
+  innovation: B
+  extensibility: A
+  reusability: A
+verdict: "world model RL 跨域稳定性的系统工程里程碑，可作为结构化技能研究的底座。"
 ---
 
 ## 背景
